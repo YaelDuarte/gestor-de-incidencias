@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.gestor.incidencias.dto.ActualizarIncidenciaRequest;
 import com.gestor.incidencias.dto.IncidenciaRequest;
+import com.gestor.incidencias.dto.IncidenciaResponse;
 import com.gestor.incidencias.entitys.Estado;
 import com.gestor.incidencias.entitys.Incidencia;
 import com.gestor.incidencias.entitys.Tipo;
@@ -47,8 +48,9 @@ public class IncidenciaService {
 	}
 	
 	@Transactional(readOnly = true)
-	public Incidencia findById(Long id) {
-		return incidenciaRepo.findById(id).orElseThrow( () -> new EntityNotFoundException());
+	public IncidenciaResponse findById(Long id) {
+		Incidencia entrada = incidenciaRepo.findById(id).orElseThrow( () -> new EntityNotFoundException());
+		return convertirAResponse(entrada);
 	}
 	
 	
@@ -61,7 +63,7 @@ public class IncidenciaService {
 	// Buscamos la incidenci a actualizar y posterior actualizamos y devolvemos esa misma incidencia
 	@Transactional
 	public Incidencia editarIncidencia(Long id, ActualizarIncidenciaRequest incidenciaRequest) {
-		Incidencia incidencia = findById(id);
+		Incidencia incidencia = buscarIncidenciaPorId(id);
 		incidencia.setTitulo(incidenciaRequest.getTitulo());
 		incidencia.setDescripcion(incidenciaRequest.getDescripcion());
 		
@@ -74,7 +76,21 @@ public class IncidenciaService {
 	// Implementacion del servicio para eliminar un registro, mediante un ID
 	@Transactional
 	public void eliminarIncidenciaPorId(Long id) {
-		Incidencia incidencia = findById(id);
+		Incidencia incidencia = buscarIncidenciaPorId(id);
 		incidenciaRepo.delete(incidencia);
+	}
+	
+	
+	private IncidenciaResponse convertirAResponse(Incidencia incidencia) {
+		return new IncidenciaResponse
+				(incidencia.getTitulo(), 
+				incidencia.getDescripcion(), 
+				incidencia.getFechaCreacion(), 
+				incidencia.getEstado(), 
+				incidencia.getId(), incidencia.getTipo());
+	}
+	
+	private Incidencia buscarIncidenciaPorId(Long id) {
+		return incidenciaRepo.findById(id).orElseThrow( () -> new EntityNotFoundException()); 
 	}
 }
