@@ -63,14 +63,15 @@ public class IncidenciaService {
 	
 	// Buscamos la incidenci a actualizar y posterior actualizamos y devolvemos esa misma incidencia
 	@Transactional
-	public Incidencia editarIncidencia(Long id, ActualizarIncidenciaRequest incidenciaRequest) {
+	public IncidenciaResponse editarIncidencia(Long id, ActualizarIncidenciaRequest incidenciaRequest) {
 		Incidencia incidencia = buscarIncidenciaPorId(id);
 		incidencia.setTitulo(incidenciaRequest.getTitulo());
 		incidencia.setDescripcion(incidenciaRequest.getDescripcion());
 		
 		Tipo tipoId = tipoRepo.findById(incidenciaRequest.getTipoId()).orElseThrow( () -> new EntityNotFoundException());
 		incidencia.setTipo(tipoId);
-		return incidenciaRepo.save(incidencia);
+		Incidencia incidenaARequest = incidenciaRepo.save(incidencia);
+		return convertirAResponse(incidenaARequest);
 		
 	}
 	

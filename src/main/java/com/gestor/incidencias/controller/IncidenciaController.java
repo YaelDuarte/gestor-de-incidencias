@@ -61,10 +61,10 @@ public class IncidenciaController {
 	}
 	
 	@PutMapping("/{id}")
-	public ResponseEntity<Incidencia> modificarIncidencia(@PathVariable Long id,
+	public ResponseEntity<IncidenciaResponse> modificarIncidencia(@PathVariable Long id,
 			@Valid @RequestBody ActualizarIncidenciaRequest incidencia){
-		Incidencia incidenciaModificada = incidenciaS.editarIncidencia(id, incidencia);
-		return new ResponseEntity<Incidencia>(incidenciaModificada,HttpStatus.OK);
+		IncidenciaResponse incidenciaModificada = incidenciaS.editarIncidencia(id, incidencia);
+		return new ResponseEntity<IncidenciaResponse>(incidenciaModificada,HttpStatus.OK);
 	}
 	
 	@DeleteMapping("/{id}")
