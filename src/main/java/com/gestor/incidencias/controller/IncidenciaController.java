@@ -43,8 +43,8 @@ public class IncidenciaController {
 	
 	
 	@PostMapping
-	public ResponseEntity<Incidencia> guardarIncidencia(@Valid @RequestBody IncidenciaRequest incidencia){
-		Incidencia incidenciaNueva = incidenciaS.guardarIncidencia(incidencia);
+	public ResponseEntity<IncidenciaResponse> guardarIncidencia(@Valid @RequestBody IncidenciaRequest incidencia){
+		IncidenciaResponse incidenciaNueva = incidenciaS.guardarIncidencia(incidencia);
 		return new ResponseEntity<>(incidenciaNueva,HttpStatus.CREATED);
 	}
 	
