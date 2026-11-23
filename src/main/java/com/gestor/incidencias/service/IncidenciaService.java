@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
+import com.gestor.incidencias.controller.IncidenciaController;
 import com.gestor.incidencias.dto.ActualizarIncidenciaRequest;
 import com.gestor.incidencias.dto.IncidenciaRequest;
 import com.gestor.incidencias.dto.IncidenciaResponse;
@@ -20,6 +20,7 @@ import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class IncidenciaService {
+
 
 	private final IncidenciasRepository incidenciaRepo;
 	private final TiposRepositorys tipoRepo;
@@ -56,8 +57,8 @@ public class IncidenciaService {
 	
 	// Listamos todas las incidencias que se han creado hasta la fecha
 	@Transactional(readOnly = true)
-	public List<Incidencia> findAll(){
-		return incidenciaRepo.findAll();
+	public List<IncidenciaResponse> findAll(){
+		return incidenciaRepo.findAll().stream().map(this::convertirAResponse).toList();
 	}
 	
 	// Buscamos la incidenci a actualizar y posterior actualizamos y devolvemos esa misma incidencia

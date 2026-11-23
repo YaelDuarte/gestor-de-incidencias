@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.gestor.incidencias.dto.ActualizarIncidenciaRequest;
 import com.gestor.incidencias.dto.IncidenciaRequest;
+import com.gestor.incidencias.dto.IncidenciaResponse;
 import com.gestor.incidencias.entitys.Incidencia;
 import com.gestor.incidencias.exception.GlobalExceptionHandler;
 import com.gestor.incidencias.service.IncidenciaService;
@@ -48,14 +49,14 @@ public class IncidenciaController {
 	}
 	
 	@GetMapping
-	public ResponseEntity<List<Incidencia>> listaIncidencias(){
-		ArrayList<Incidencia> listaIncidencias = (ArrayList<Incidencia>) incidenciaS.findAll();
+	public ResponseEntity<List<IncidenciaResponse>> listaIncidencias(){
+		List<IncidenciaResponse> listaIncidencias = incidenciaS.findAll();
 		return new ResponseEntity<>(listaIncidencias,HttpStatus.OK);		
 	}
 	
 	// Busqueda centralizada por id unico de la incidencia 
 	@GetMapping("/{id}")
-	public Incidencia buscarIncidenciaPorId(@PathVariable Long id) {
+	public IncidenciaResponse buscarIncidenciaPorId(@PathVariable Long id) {
 		return incidenciaS.findById(id);
 	}
 	
