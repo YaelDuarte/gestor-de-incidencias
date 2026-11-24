@@ -65,7 +65,7 @@ public class IncidenciaController {
 			@Valid @RequestBody ActualizarIncidenciaRequest incidencia){
 		IncidenciaResponse incidenciaModificada = incidenciaS.editarIncidencia(id, incidencia);
 		return new ResponseEntity<IncidenciaResponse>(incidenciaModificada,HttpStatus.OK);
-	}
+	} 
 	
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Void> eliminarIncidencia(@PathVariable Long id){

@@ -5,13 +5,13 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.gestor.incidencias.controller.IncidenciaController;
 import com.gestor.incidencias.dto.ActualizarIncidenciaRequest;
 import com.gestor.incidencias.dto.IncidenciaRequest;
 import com.gestor.incidencias.dto.IncidenciaResponse;
 import com.gestor.incidencias.entitys.Estado;
 import com.gestor.incidencias.entitys.Incidencia;
 import com.gestor.incidencias.entitys.Tipo;
+import com.gestor.incidencias.mapper.IncidenciaMapper;
 import com.gestor.incidencias.repository.IncidenciasRepository;
 import com.gestor.incidencias.repository.TiposRepositorys;
 
@@ -24,10 +24,12 @@ public class IncidenciaService {
 
 	private final IncidenciasRepository incidenciaRepo;
 	private final TiposRepositorys tipoRepo;
+	private final IncidenciaMapper incidenciaMap;
 	
-	public IncidenciaService(IncidenciasRepository incidenciaRepo, TiposRepositorys tipoRepo) {
+	public IncidenciaService(IncidenciasRepository incidenciaRepo, TiposRepositorys tipoRepo,IncidenciaMapper incidenciaMap) {
 		this.incidenciaRepo = incidenciaRepo;
 		this.tipoRepo = tipoRepo;
+		this.incidenciaMap = incidenciaMap;
 	}
 	
 	@Transactional
@@ -45,20 +47,19 @@ public class IncidenciaService {
 		incidenciaEntity.setEstado(Estado.PENDIENTE);
 		
 		Incidencia response = incidenciaRepo.save(incidenciaEntity);
-		return convertirAResponse(response);
+		return incidenciaMap.toResponse(response);
 	}
 	
 	@Transactional(readOnly = true)
 	public IncidenciaResponse findById(Long id) {
-		Incidencia entrada = incidenciaRepo.findById(id).orElseThrow( () -> new EntityNotFoundException());
-		return convertirAResponse(entrada);
+		return incidenciaMap.toResponse(buscarIncidenciaPorId(id));
 	}
 	
 	
 	// Listamos todas las incidencias que se han creado hasta la fecha
 	@Transactional(readOnly = true)
 	public List<IncidenciaResponse> findAll(){
-		return incidenciaRepo.findAll().stream().map(this::convertirAResponse).toList();
+		return incidenciaRepo.findAll().stream().map(incidenciaMap::toResponse).toList();
 	}
 	
 	// Buscamos la incidenci a actualizar y posterior actualizamos y devolvemos esa misma incidencia
@@ -70,8 +71,8 @@ public class IncidenciaService {
 		
 		Tipo tipoId = tipoRepo.findById(incidenciaRequest.getTipoId()).orElseThrow( () -> new EntityNotFoundException());
 		incidencia.setTipo(tipoId);
-		Incidencia incidenaARequest = incidenciaRepo.save(incidencia);
-		return convertirAResponse(incidenaARequest);
+		Incidencia incidenciaAGuardar = incidenciaRepo.save(incidencia);
+		return incidenciaMap.toResponse(incidenciaAGuardar);
 		
 	}
 	
@@ -82,15 +83,6 @@ public class IncidenciaService {
 		incidenciaRepo.delete(incidencia);
 	}
 	
-	
-	private IncidenciaResponse convertirAResponse(Incidencia incidencia) {
-		return new IncidenciaResponse
-				(incidencia.getTitulo(), 
-				incidencia.getDescripcion(), 
-				incidencia.getFechaCreacion(), 
-				incidencia.getEstado(), 
-				incidencia.getId(), incidencia.getTipo());
-	}
 	
 	private Incidencia buscarIncidenciaPorId(Long id) {
 		return incidenciaRepo.findById(id).orElseThrow( () -> new EntityNotFoundException()); 
