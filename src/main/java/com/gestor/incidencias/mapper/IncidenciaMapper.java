@@ -2,6 +2,7 @@ package com.gestor.incidencias.mapper;
 
 import org.springframework.stereotype.Component;
 
+import com.gestor.incidencias.dto.IncidenciaRequest;
 import com.gestor.incidencias.dto.IncidenciaResponse;
 import com.gestor.incidencias.entitys.Incidencia;
 
@@ -22,5 +23,15 @@ public class IncidenciaMapper {
 				incidencia.getId(), incidencia.getTipo());
 		
 		return incidenciaADevolver;
+	}
+	
+	
+	public Incidencia toEntity(IncidenciaRequest incidencia) {
+		
+		Incidencia incidenciaNueva = new Incidencia();
+		incidenciaNueva.setTitulo(incidencia.getTitulo());
+		incidenciaNueva.setDescripcion(incidencia.getDescripcion());
+		
+		return incidenciaNueva;
 	}
 }

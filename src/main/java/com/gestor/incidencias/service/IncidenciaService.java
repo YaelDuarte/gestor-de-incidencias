@@ -34,19 +34,17 @@ public class IncidenciaService {
 	
 	@Transactional
 	public IncidenciaResponse guardarIncidencia(IncidenciaRequest incidencia) throws  EntityNotFoundException{
-		Incidencia incidenciaEntity = new Incidencia();
+		Incidencia conversionDto =incidenciaMap.toEntity(incidencia);
 		LocalDateTime fechaActual = LocalDateTime.now();
 		// Busqueda del tipo para la asignacion 
 		Tipo tipo = tipoRepo.findById(incidencia.getTipoId()).orElseThrow( () -> 
 		new EntityNotFoundException("Valor no encontrado"));
 		
-		incidenciaEntity.setTitulo(incidencia.getTitulo());
-		incidenciaEntity.setDescripcion(incidencia.getDescripcion());
-		incidenciaEntity.setTipo(tipo);
-		incidenciaEntity.setFechaCreacion(fechaActual);
-		incidenciaEntity.setEstado(Estado.PENDIENTE);
+		conversionDto.setFechaCreacion(fechaActual);
+		conversionDto.setEstado(Estado.PENDIENTE);
+		conversionDto.setTipo(tipo);
 		
-		Incidencia response = incidenciaRepo.save(incidenciaEntity);
+		Incidencia response = incidenciaRepo.save(conversionDto);
 		return incidenciaMap.toResponse(response);
 	}
 	
