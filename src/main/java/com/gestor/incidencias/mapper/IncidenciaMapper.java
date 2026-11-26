@@ -2,6 +2,7 @@ package com.gestor.incidencias.mapper;
 
 import org.springframework.stereotype.Component;
 
+import com.gestor.incidencias.dto.ActualizarIncidenciaRequest;
 import com.gestor.incidencias.dto.IncidenciaRequest;
 import com.gestor.incidencias.dto.IncidenciaResponse;
 import com.gestor.incidencias.entitys.Incidencia;
@@ -33,5 +34,12 @@ public class IncidenciaMapper {
 		incidenciaNueva.setDescripcion(incidencia.getDescripcion());
 		
 		return incidenciaNueva;
+	}
+	
+	public Incidencia toEditarEntity(ActualizarIncidenciaRequest incidenciaEditar,Incidencia incidencia) {
+		incidencia.setTitulo(incidenciaEditar.getTitulo());
+		incidencia.setDescripcion(incidenciaEditar.getDescripcion());
+		
+		return incidencia;
 	}
 }

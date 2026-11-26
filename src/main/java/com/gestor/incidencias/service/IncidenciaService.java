@@ -64,13 +64,10 @@ public class IncidenciaService {
 	@Transactional
 	public IncidenciaResponse editarIncidencia(Long id, ActualizarIncidenciaRequest incidenciaRequest) {
 		Incidencia incidencia = buscarIncidenciaPorId(id);
-		incidencia.setTitulo(incidenciaRequest.getTitulo());
-		incidencia.setDescripcion(incidenciaRequest.getDescripcion());
-		
-		Tipo tipoId = tipoRepo.findById(incidenciaRequest.getTipoId()).orElseThrow( () -> new EntityNotFoundException());
-		incidencia.setTipo(tipoId);
-		Incidencia incidenciaAGuardar = incidenciaRepo.save(incidencia);
-		return incidenciaMap.toResponse(incidenciaAGuardar);
+		incidencia = incidenciaMap.toEditarEntity(incidenciaRequest, incidencia);
+		Tipo tipo = tipoRepo.findById(incidenciaRequest.getTipoId()).orElseThrow( () -> new EntityNotFoundException());
+		incidencia.setTipo(tipo);
+		return incidenciaMap.toResponse(incidencia);
 		
 	}
 	
